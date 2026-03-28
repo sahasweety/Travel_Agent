@@ -188,12 +188,13 @@ class SmartTripMCPServer:
             if not query:
                 return {"error": "Query parameter required"}
             
-            # Use web search
-            results = await self.travel_system.search_with_tavily(query)
+            # Use web search - now returns tuple (text, images)
+            results, images = await self.travel_system.search_with_tavily(query)
             
             return {
                 "query": query,
                 "results": results,
+                "images": images,  # NEW: Include images
                 "status": "success"
             }
         

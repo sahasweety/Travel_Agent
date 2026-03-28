@@ -337,6 +337,17 @@ def main():
                 st.markdown("## 🔍 Destination Research")
                 st.info("Information gathered from travel websites and reviews")
                 st.text(result['search_results'])
+                
+                # Display images from search results
+                if result.get('search_images') and len(result['search_images']) > 0:
+                    st.markdown("### 📸 Images")
+                    cols = st.columns(3)
+                    for idx, image_url in enumerate(result['search_images'][:6]):  # Show up to 6 images
+                        with cols[idx % 3]:
+                            try:
+                                st.image(image_url, use_column_width=True)
+                            except Exception as e:
+                                st.caption(f"⚠️ Could not load image")
             
             with tab3:
                 st.markdown("## 🗺️ Google Maps Insights")

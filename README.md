@@ -13,6 +13,7 @@
 - ✅ **Rich Place Details** - Phone, website, opening hours, ratings, addresses
 - ✅ **Budget-Aware Planning** - Custom budgets from ₹10K to ₹1,00,000+
 - ✅ **Web Intelligence** - Real-time travel information via Tavily API
+- ✅ **Destination Images** - Visual gallery of destination photos & attractions
 - ✅ **No Quota Issues** - OpenRouter API support with unlimited usage
 - ✅ **Fallback Mechanisms** - Continues even if APIs hit rate limits
 - ✅ **Free Map Data** - OpenStreetMap (no API key needed)

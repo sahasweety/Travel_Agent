@@ -74,8 +74,8 @@ class TravelPlanningSystem:
         
         print("✓ All required API keys are configured")
 
-    async def search_with_tavily(self, query: str) -> str:
-        """Search using Tavily API directly"""
+    async def search_with_tavily(self, query: str) -> tuple:
+        """Search using Tavily API directly and extract images"""
         try:
             import httpx
             
@@ -86,7 +86,8 @@ class TravelPlanningSystem:
                 "query": query,
                 "search_depth": "advanced",
                 "include_answer": True,
-                "max_results": 10
+                "max_results": 10,
+                "include_images": True  # Request images from Tavily
             }
             
             async with httpx.AsyncClient(timeout=30.0) as client:
@@ -94,9 +95,10 @@ class TravelPlanningSystem:
                 response.raise_for_status()
                 data = response.json()
                 
-                # Format results
+                # Format text results
                 answer = data.get("answer", "")
                 results = data.get("results", [])
+                images = data.get("images", [])  # Extract images from response
                 
                 formatted = f"Search Answer: {answer}\n\n"
                 formatted += "Top Results:\n"
@@ -104,12 +106,16 @@ class TravelPlanningSystem:
                     formatted += f"\n{i}. {result.get('title', 'N/A')}\n"
                     formatted += f"   {result.get('content', 'N/A')}\n"
                     formatted += f"   Source: {result.get('url', 'N/A')}\n"
+                    # Include image if available
+                    if result.get('image'):
+                        formatted += f"   Image: {result.get('image')}\n"
                 
-                return formatted
+                # Return both text and images list
+                return formatted, images
                 
         except Exception as e:
             print(f"Tavily search error: {str(e)}")
-            return f"Search error: {str(e)}"
+            return f"Search error: {str(e)}", []
     
     async def search_with_maps(self, query: str) -> str:
         """Search using OpenStreetMap Nominatim API with proximity sorting"""
@@ -517,7 +523,7 @@ Monitor usage: https://ai.dev/rate-limit
 - Safety tips and local customs
 - Daily budget estimates for {passengers} travelers"""
             
-            search_results = await self.search_with_tavily(search_query)
+            search_results, search_images = await self.search_with_tavily(search_query)
             print("Search completed")
             
             # Phase 2: Get location info
@@ -567,6 +573,7 @@ Ensure the plan stays within ₹{budget:,} budget and includes specific costs.""
                 'budget': budget,
                 'travelers': passengers,
                 'search_results': search_results,
+                'search_images': search_images,  # NEW: Include images
                 'maps_results': maps_results,
                 'comprehensive_plan': final_plan,
                 'generated_at': datetime.now().isoformat()
