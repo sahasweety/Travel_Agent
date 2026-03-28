@@ -1,8 +1,8 @@
-# 🌍 AI Travel Planning System
+# 🚀 SmartTrip Planner
 
-An intelligent AI-powered travel planning system that generates personalized itineraries using advanced language models, real-time location data, and web research.
+*An intelligent AI-powered travel planning system that generates personalized itineraries using advanced language models, real-time location data, and web research.*
 
-**Status**: ✅ Production Ready | 🚀 Fully Functional
+**Status**: ✅ Production Ready | 🚀 Fully Functional | 🔌 MCP Server Enabled
 
 ## ✨ Features
 
@@ -44,7 +44,7 @@ An intelligent AI-powered travel planning system that generates personalized iti
 
 ```bash
 git clone https://github.com/sahasweety/Travel_Agent.git
-cd Travel_Agent
+cd SmartTrip-Planner
 ```
 
 ### 2. Create Virtual Environment
@@ -139,7 +139,87 @@ Visit `http://localhost:8501` and:
 - Practical tips
 - Contact details & operating hours for all places
 
-### 🐍 Python API
+### � MCP Server (Model Context Protocol)
+
+SmartTrip Planner now includes MCP server support! This allows integration with Claude Desktop and other AI models.
+
+#### Start the MCP Server
+
+```bash
+# Install MCP (optional)
+pip install mcp
+
+# Start the server
+python mcp_server.py
+```
+
+**Output:**
+```
+🚀 SmartTrip Planner MCP Server running...
+📍 Available tools:
+  - generate_travel_plan
+  - search_locations
+  - search_travel_info
+```
+
+#### Available MCP Tools
+
+1. **generate_travel_plan** - Generate complete travel itineraries
+   ```json
+   {
+     "destination": "Mumbai",
+     "origin": "Delhi",
+     "departure_date": "2026-04-15",
+     "return_date": "2026-04-20",
+     "budget": "mid",
+     "passengers": 2
+   }
+   ```
+
+2. **search_locations** - Find hotels, restaurants, attractions by proximity
+   ```json
+   {
+     "location": "Mumbai"
+   }
+   ```
+
+3. **search_travel_info** - Web search for travel information
+   ```json
+   {
+     "query": "best time to visit Mumbai weather"
+   }
+   ```
+
+#### Configure Claude Desktop (Claude 3.5+)
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "smarttrip": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "env": {
+        "OPENROUTER_API_KEY": "your_key_here",
+        "TAVILY_API_KEY": "your_key_here"
+      }
+    }
+  }
+}
+```
+
+#### Usage in Claude
+
+Once configured, Claude can directly access:
+
+```
+"Plan a 4-day trip to Goa with ₹40,000 budget"
+→ Claude uses generate_travel_plan tool
+→ Gets instant itinerary with all details
+```
+
+### �🐍 Python API
 
 Generate travel plans programmatically:
 
@@ -176,7 +256,7 @@ Generates `travel_plan.txt` with complete plan including all location data.
 ## 📁 Project Structure
 
 ```
-travel-agent/
+SmartTrip-Planner/
 ├── app.py                      # Core travel system (500+ lines)
 │   ├── TravelPlanningSystem   # Main class
 │   ├── search_with_tavily()   # Web research
@@ -184,13 +264,19 @@ travel-agent/
 │   ├── generate_with_context() # AI generation
 │   └── _generate_with_openrouter() # OpenRouter integration
 │
+├── mcp_server.py               # MCP Server (NEW! 🆕)
+│   ├── SmartTripMCPServer     # MCP implementation
+│   ├── generate_travel_plan   # MCP tool
+│   ├── search_locations        # MCP tool
+│   └── search_travel_info      # MCP tool
+│
 ├── st_app.py                   # Streamlit web interface
 │   ├── Sidebar (Trip inputs)
 │   ├── Main display (Results)
 │   └── Formatted output sections
 │
 ├── TravelMapView.tsx           # React map component
-├── requirements.txt            # Python dependencies
+├── requirements.txt            # Python dependencies (includes mcp)
 ├── .env                        # Environment variables (gitignored)
 ├── .gitignore                  # Git exclusions
 ├── README.md                   # This file
@@ -209,6 +295,8 @@ travel-agent/
 - 📋 Template fallback when APIs rate-limited
 - 📱 Better Streamlit UI
 - 🌐 Improved OpenStreetMap integration
+- 🆕 **MCP (Model Context Protocol) Server** - AI model integration
+- 🆕 Claude Desktop support for travel planning
 
 ## 📚 Example Response
 
@@ -390,23 +478,194 @@ Each place includes:
 - ✅ Operating hours
 - ✅ User ratings
 
-## 📊 Technology Stack
+## � MCP Integration & AI Model Support
 
-**Backend:**
-- Python 3.8+
-- Streamlit (Web UI)
-- OpenRouter API (AI) - Gemini Pro
-- Google Gemini API (AI) - Alternative
-- Tavily API (Web Search)
-- OpenStreetMap Nominatim (Location Data)
-- httpx (Async HTTP)
+### What is MCP?
 
-**Features:**
-- Async/await for concurrent requests
-- Exponential backoff for rate limits
-- Haversine distance calculation
-- Template fallback for quota limits
-- Comprehensive error handling
+**Model Context Protocol (MCP)** is a standardized interface that allows AI models to safely access external tools and data sources. SmartTrip Planner is now MCP-enabled! 
+
+### Why SmartTrip Planner + MCP?
+
+✅ **Direct Claude Integration** - Use travel planning in Claude conversations  
+✅ **Standardized Interface** - Works with any MCP-compatible AI model  
+✅ **Tool Exposure** - AI can call travel functions directly  
+✅ **Real-time Data** - Latest travel info, locations, prices  
+✅ **Extensible** - Add more tools easily  
+
+### Getting Started with MCP
+
+#### 1. Install MCP Support
+
+```bash
+pip install mcp
+```
+
+#### 2. Start MCP Server
+
+```bash
+python mcp_server.py
+```
+
+**Expected Output:**
+```
+✅ Travel system initialized with OpenRouter API + OpenStreetMap (free)
+🚀 SmartTrip Planner MCP Server running...
+📍 Available tools:
+  - generate_travel_plan
+  - search_locations
+  - search_travel_info
+```
+
+#### 3. Configure Claude Desktop (Claude 3.5+)
+
+**For Mac/Linux:**
+```json
+{
+  "mcpServers": {
+    "smarttrip": {
+      "command": "python",
+      "args": ["/path/to/mcp_server.py"],
+      "env": {
+        "OPENROUTER_API_KEY": "sk-or-v1-...",
+        "TAVILY_API_KEY": "tvly-..."
+      }
+    }
+  }
+}
+```
+Location: `~/.config/Claude/claude_desktop_config.json`
+
+**For Windows:**
+```json
+{
+  "mcpServers": {
+    "smarttrip": {
+      "command": "python",
+      "args": ["C:\\path\\to\\mcp_server.py"],
+      "env": {
+        "OPENROUTER_API_KEY": "sk-or-v1-...",
+        "TAVILY_API_KEY": "tvly-..."
+      }
+    }
+  }
+}
+```
+Location: `%APPDATA%\Claude\claude_desktop_config.json`
+
+#### 4. Use in Claude
+
+Once configured, ask Claude:
+
+```
+"Plan a 5-day trip to Goa with ₹30,000 budget for 3 people"
+```
+
+Claude will:
+1. ✅ Call `generate_travel_plan` tool
+2. ✅ Get complete itinerary
+3. ✅ Include nearby hotels/restaurants/attractions
+4. ✅ Return formatted travel plan
+
+### MCP Tools Reference
+
+#### Tool 1: `generate_travel_plan`
+Generate complete travel itineraries
+
+**Parameters:**
+- `destination` (string) - Destination city
+- `origin` (string, optional) - Origin city (default: Delhi)
+- `departure_date` (string) - Date in YYYY-MM-DD
+- `return_date` (string) - Date in YYYY-MM-DD
+- `budget` (string) - "budget" | "mid" | "premium" | "luxury"
+- `passengers` (integer) - Number of travelers
+
+**Response:** Complete travel plan with itinerary, places, budget
+
+#### Tool 2: `search_locations`
+Find locations by proximity
+
+**Parameters:**
+- `location` (string) - City name
+
+**Response:** Hotels, restaurants, attractions sorted by distance
+
+#### Tool 3: `search_travel_info`
+Web search for travel information
+
+**Parameters:**
+- `query` (string) - Travel question or topic
+
+**Response:** Travel research with sources
+
+### Example Conversations with Claude
+
+**Example 1: Quick Trip Planning**
+```
+User: "I have 3 days and ₹20,000. Where should I go from Delhi?"
+Claude: [Calls search_travel_info] 
+        → "Based on budget, I recommend: Agra, Jaipur, or Mathura"
+        [Calls generate_travel_plan for selected destination]
+        → Returns complete 3-day itinerary
+```
+
+**Example 2: Location Research**
+```
+User: "What restaurants are near my hotel in Mumbai?"
+Claude: [Calls search_locations]
+        → Returns 8+ restaurants with distance, phone, hours
+```
+
+**Example 3: Complex Planning**
+```
+User: "Plan a luxury honeymoon trip for 5 days in Kerala with ₹1,00,000 budget"
+Claude: [Calls generate_travel_plan with luxury budget]
+        → Premium hotels, 5-star restaurants, luxury activities
+        [Calls search_locations for premium places]
+        → Curates romantic experiences with all details
+```
+
+### Troubleshooting MCP
+
+| Issue | Solution |
+|-------|----------|
+| "MCP not found" | `pip install mcp` |
+| Claude won't see tools | Check claude_desktop_config.json path |
+| API errors | Verify OPENROUTER_API_KEY and TAVILY_API_KEY in .env |
+| Server won't start | Run `python mcp_server.py` from project root |
+| Connection timeout | Ensure port 8000 is available |
+
+### Advanced: Custom MCP Tools
+
+Add your own tools to `mcp_server.py`:
+
+```python
+@self.server.list_tools()
+async def list_tools():
+    return [
+        # ... existing tools ...
+        {
+            "name": "your_custom_tool",
+            "description": "What it does",
+            "inputSchema": { ... }
+        }
+    ]
+
+@self.server.call_tool()
+async def call_tool(name: str, arguments: dict):
+    # ... existing handlers ...
+    elif name == "your_custom_tool":
+        return await self._handle_custom_tool(arguments)
+```
+
+### Future MCP Enhancements
+
+🔮 Planned additions:
+- Hotel booking integration
+- Flight search tools
+- Budget expense tracking
+- Real-time weather integration
+- Currency conversion tools
+- Travel guide generation
 
 ## 💰 API Costs Comparison (in Indian Rupees)
 
