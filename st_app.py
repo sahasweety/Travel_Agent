@@ -3,6 +3,9 @@ import asyncio
 from datetime import datetime, timedelta
 from typing import Dict, Any
 import json
+import subprocess
+import time
+import os
 
 # Import your travel planning system
 from app import TravelPlanningSystem
@@ -74,6 +77,42 @@ def initialize_session_state():
         st.session_state.travel_plan = None
     if 'planning_in_progress' not in st.session_state:
         st.session_state.planning_in_progress = False
+    if 'mcp_started' not in st.session_state:
+        st.session_state.mcp_started = False
+
+@st.cache_resource
+def start_mcp_server():
+    """Start MCP server in background when Streamlit app launches"""
+    try:
+        # Get the directory where this script is located
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        mcp_script = os.path.join(current_dir, "mcp_server.py")
+        
+        # Python executable path
+        python_exe = os.path.join(current_dir, ".venv", "Scripts", "python.exe")
+        if not os.path.exists(python_exe):
+            python_exe = "python"  # Fallback to system python
+        
+        # Start MCP server as background process
+        process = subprocess.Popen(
+            [python_exe, mcp_script],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == 'nt' else 0
+        )
+        
+        time.sleep(1)  # Wait for MCP server to initialize
+        
+        # Check if process is still running
+        if process.poll() is None:
+            st.session_state.mcp_started = True
+            return process
+        else:
+            return None
+    
+    except Exception as e:
+        print(f"⚠️  Failed to start MCP server: {e}")
+        return None
 
 def format_currency(amount):
     """Format currency in Indian Rupees"""
@@ -87,6 +126,15 @@ async def create_travel_plan(trip_data: Dict[str, Any]):
 
 def main():
     initialize_session_state()
+    
+    # Start MCP server in background
+    start_mcp_server()
+    
+    # Show MCP status in sidebar
+    if st.session_state.mcp_started:
+        with st.sidebar:
+            st.success("🔌 **MCP Server Running**")
+            st.caption("Claude Desktop integration active")
     
     # Header
     col1, col2, col3 = st.columns([1, 2, 1])

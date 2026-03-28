@@ -110,11 +110,13 @@ GOOGLE_API_KEY1=your_google_gemini_api_key_here
 ### 6. Run the Application
 
 ```bash
-# Start Streamlit UI
+# Start Streamlit UI (MCP server auto-starts in background)
 streamlit run st_app.py
 
 # Opens at http://localhost:8501
 ```
+
+**✨ NEW**: MCP server now starts automatically in the background when you launch Streamlit!
 
 ## Usage
 
@@ -146,20 +148,20 @@ SmartTrip Planner now includes MCP server support! This allows integration with 
 #### Start the MCP Server
 
 ```bash
-# Install MCP (optional)
+# Just run Streamlit - MCP starts automatically! 🚀
+streamlit run st_app.py
+```
+
+**MCP Auto-Start Features:**
+- ✅ Starts automatically in background
+- ✅ Shows status in Streamlit sidebar
+- ✅ Ready for Claude Desktop integration
+
+**Or manually start MCP server:**
+
+```bash
 pip install mcp
-
-# Start the server
 python mcp_server.py
-```
-
-**Output:**
-```
-🚀 SmartTrip Planner MCP Server running...
-📍 Available tools:
-  - generate_travel_plan
-  - search_locations
-  - search_travel_info
 ```
 
 #### Available MCP Tools
@@ -502,6 +504,14 @@ pip install mcp
 
 #### 2. Start MCP Server
 
+**Automatic Start (Recommended):**
+```bash
+# MCP server auto-starts when you run Streamlit!
+streamlit run st_app.py
+```
+✅ MCP runs in background, check Streamlit sidebar for status
+
+**Manual Start (Optional):**
 ```bash
 python mcp_server.py
 ```
@@ -520,7 +530,7 @@ python mcp_server.py
 ✅ Server connected via stdio
 ```
 
-**Status**: ✅ **MCP Server is CONNECTED and RUNNING** - Ready for Claude Desktop integration!
+**Status**: ✅ **MCP Server is Connected & Running** (automatically with Streamlit!)
 
 #### 3. Configure Claude Desktop (Claude 3.5+)
 
