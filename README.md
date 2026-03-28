@@ -74,7 +74,7 @@ pip install -r requirements.txt
 3. Go to: https://openrouter.ai/keys
 4. Copy your API key
 
-**Pricing**: Pay only for usage (~$0.10-$1 per travel plan)
+**Pricing**: Pay only for what you use (~₹8-80 per travel plan)
 
 #### 🔵 Option B: Google Gemini API (Free Tier with Rate Limits)
 
@@ -408,17 +408,22 @@ Each place includes:
 - Template fallback for quota limits
 - Comprehensive error handling
 
-## 💰 API Costs Comparison
+## 💰 API Costs Comparison (in Indian Rupees)
 
 | Service | Cost | Limits | Notes |
 |---------|------|--------|-------|
-| **OpenRouter (Recommended)** | ~$0.10-1/plan | ✅ Unlimited | Pay-as-you-go, best value |
+| **OpenRouter (Recommended)** | ~₹8-80/plan | ✅ Unlimited | Pay-as-you-go, best value |
 | **Google Gemini Free** | Free | ❌ 60 req/min | Rate limited, quota resets daily |
-| **Google Gemini Paid** | $0.075/Million input tokens | ✅ Unlimited | Reliable for production |
+| **Google Gemini Paid** | ₹6.23/Million input tokens | ✅ Unlimited | Reliable for production (~₹0.062 per 1000 tokens) |
 | **Tavily API** | Free tier available | Limited | Essential for web research |
 | **OpenStreetMap** | Free | ✅ Unlimited | No API key needed |
 
 **Recommendation**: Start with OpenRouter free trial, then evaluate based on usage.
+
+**Approximate Monthly Costs (for 100 plans/month):**
+- OpenRouter: ₹800-8000/month
+- Google Gemini Paid: ₹100-500/month (based on usage)
+- Combined: ₹1000-8500/month
 
 ## ⚠️ Troubleshooting
 
