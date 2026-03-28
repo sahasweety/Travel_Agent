@@ -19,11 +19,12 @@ from app import TravelPlanningSystem
 # Try to import mcp - if not available, provide graceful fallback
 try:
     from mcp.server import Server
-    from mcp.types import Resource, Tool, TextContent, ToolUseBlock
+    from mcp.server.stdio import stdio_server
+    from mcp.types import Resource, Tool, TextContent
     MCP_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     MCP_AVAILABLE = False
-    print("⚠️  MCP not installed. Install with: pip install mcp")
+    print(f"⚠️  MCP import error: {e}")
 
 
 class SmartTripMCPServer:
@@ -200,18 +201,25 @@ class SmartTripMCPServer:
             return {"error": f"Travel info search failed: {str(e)}"}
     
     async def run(self):
-        """Start the MCP server"""
+        """Start the MCP server using stdio transport"""
         if not MCP_AVAILABLE:
             print("❌ MCP not available. Install with: pip install mcp")
             return
         
-        async with self.server:
-            print("🚀 SmartTrip Planner MCP Server running...")
-            print("📍 Available tools:")
-            print("  - generate_travel_plan")
-            print("  - search_locations")
-            print("  - search_travel_info")
-            await asyncio.Future()  # Keep running
+        print("🚀 SmartTrip Planner MCP Server initialized")
+        print("📍 Available tools:")
+        print("  - generate_travel_plan")
+        print("  - search_locations")
+        print("  - search_travel_info")
+        print("\nStarting stdio transport...")
+        
+        # Use stdio transport for MCP communication
+        async with stdio_server() as (read_stream, write_stream):
+            print("✅ Server connected via stdio")
+            try:
+                await self.server.run(read_stream, write_stream, None)
+            except Exception as e:
+                print(f"Server error: {e}")
 
 
 def start_mcp_server():
